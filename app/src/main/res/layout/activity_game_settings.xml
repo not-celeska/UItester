@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameSettingsActivity">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/settings_background" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="427px"
+        android:layout_height="267px"
+        android:layout_marginStart="12dp"
+        android:background="@null"
+        android:onClick="closeMenu"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.966"
+        app:srcCompat="@drawable/back" />
+
+    <ImageButton
+        android:id="@+id/confirmButton"
+        android:layout_width="427px"
+        android:layout_height="267px"
+        android:layout_marginEnd="12dp"
+        android:background="@null"
+        android:onClick="startGame"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.966"
+        app:srcCompat="@drawable/confirm" />
+
+    <SeekBar
+        android:id="@+id/numDigitsSlider"
+        android:layout_width="88dp"
+        android:layout_height="63dp"
+        android:min="3"
+        android:max="8"
+        android:progress="5"
+        android:progressTint="#C15841"
+        android:progressBackgroundTint="#DCEAF8"
+        android:progressBackgroundTintMode="screen"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:thumbTint="#C15841"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.829"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.179" />
+
+    <CheckBox
+        android:id="@+id/dontSaveScoreToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.7"
+        android:scaleY="1.7"
+        android:buttonTint="#336699"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.826"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.275" />
+
+    <CheckBox
+        android:id="@+id/showCorrectNumberToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#336699"
+        android:scaleX="1.7"
+        android:scaleY="1.7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.826"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37" />
+
+    <TextView
+        android:id="@+id/numDigitsDisplay"
+        android:layout_width="29dp"
+        android:layout_height="49dp"
+        android:text="4"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:textAlignment="center"
+        android:textColor="#336699"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.185" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
