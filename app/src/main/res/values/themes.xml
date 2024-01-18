@@ -4,6 +4,7 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
 
+        <item name="android:animation">@android:anim/bounce_interpolator</item>
     </style>
 
     <style name="Theme.UItester" parent="Base.Theme.UItester" />

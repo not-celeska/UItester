@@ -15,4 +15,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/stats_background" />
+
+    <ImageButton
+        android:id="@+id/gotchaButtonStat"
+        android:layout_width="371px"
+        android:layout_height="182px"
+        android:background="@null"
+        android:onClick="closeMenu"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.855"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.949"
+        app:srcCompat="@drawable/gotcha" />
+
+    <ImageButton
+        android:id="@+id/resetButton"
+        android:layout_width="371px"
+        android:layout_height="182px"
+        android:background="@null"
+        android:onClick="resetStats"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.133"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.949"
+        app:srcCompat="@drawable/reset" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

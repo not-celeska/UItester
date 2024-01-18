@@ -99,8 +99,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void addSymbolToGuess(char symbol) {
 
-        // TODO: Check if the number has been entered before <-- give user a warning.
-
         // [CLARITY] Is there already enough digits in the guess?
         if (guess.length() < numDigitsInCorrectNumber) {
 
