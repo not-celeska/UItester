@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         clearSystemUI();
 
-//        if (statFileEmpty()) {
+        if (statFileEmpty()) {
             saveToStatFile("0:0 0 0 0 0 0:0");
-//        }
+        }
 
     }
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 gameSettingsButton.setImageResource(R.drawable.play);
-                Intent intent = new Intent(MainActivity.this, GameSettingsActivity.class);
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         }, 80); // Delay to see the icon change

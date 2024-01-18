@@ -14,7 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class GameplayActivity extends AppCompatActivity {
@@ -136,6 +142,7 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }, 80); // Delay to see the icon change
     }
+
     public void submit(View view) {
 
         ImageButton submitButton = findViewById(R.id.submitButton);
@@ -306,7 +313,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-
     private void userWinsGame() {
 
         // [TIME] Takes note of end time; then processes it.
@@ -327,10 +333,8 @@ public class GameplayActivity extends AppCompatActivity {
             dataNotSavedDisplay.setText("THIS DATA IS NOT SAVED!");
         }
         else {
-            saveData();
+            saveData(secondsElapsed, score);
         }
-
-
 
         TextView timeDisplay = winScreen.findViewById(R.id.timeDisplay);
         timeDisplay.setText(formattedTime);
@@ -362,7 +366,6 @@ public class GameplayActivity extends AppCompatActivity {
         winScreen.show();
     }
 
-
     private String formatTime(int seconds) {
 
         // [CLARITY] If there's only seconds, it will look like "#s".
@@ -393,8 +396,110 @@ public class GameplayActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    private void saveData() {
+    private void saveData(int gameTotalSecondsPlayed, int gameScore) {
 
+        String[] oldRawData = readStatFile().split(" ");
+        String newData = "";
+
+        // total play time -- extract old one, add new, format MM:SS
+        int gameMinutes = gameTotalSecondsPlayed / 60;
+        int gameSeconds = gameTotalSecondsPlayed % 60;
+
+        int oldMinutes = Integer.parseInt(oldRawData[0].split(":")[0]);
+        int oldSeconds = Integer.parseInt(oldRawData[0].split(":")[1]);
+
+        int newMinutes = oldMinutes + gameMinutes + (gameSeconds + oldSeconds) / 60;
+        int newSeconds = (gameSeconds + oldSeconds) % 60;
+
+        newData += newMinutes + ":" + newSeconds + " ";
+
+        // total guesses made.
+        int oldTotalGuesses = Integer.parseInt(oldRawData[1]);
+        newData += (oldTotalGuesses + totalGuesses) + " ";
+
+        // total games played.
+        int oldTotalGamesPlayed = Integer.parseInt(oldRawData[2]);
+        newData += (oldTotalGamesPlayed + 1) + " ";
+
+        // highest score
+        int oldHighscore = Integer.parseInt(oldRawData[3]);
+        if (gameScore > oldHighscore) {
+            newData += gameScore + " ";
+        }
+        else {
+            newData += oldHighscore + " ";
+        }
+
+        // average guesses
+        newData += (oldTotalGuesses + totalGuesses) / (oldTotalGamesPlayed + 1) + " ";
+
+        // average time
+        int totalSeconds = newSeconds + newMinutes * 60;
+        int averageTotalSeconds = totalSeconds / (oldTotalGamesPlayed + 1);
+
+        int averageMinutes = averageTotalSeconds / 60;
+        int averageSeconds = averageTotalSeconds % 60;
+
+        newData += averageMinutes + ":" + averageSeconds;
+
+        saveToStatFile(newData);
+    }
+
+    public String readStatFile() {
+
+        FileInputStream fileInputStream = null;
+
+        try {
+            fileInputStream = openFileInput(STAT_FILE_ADDRESS);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String textToLoad;
+
+            while ((textToLoad = bufferedReader.readLine()) != null) {
+                stringBuilder.append(textToLoad).append("\n");
+            }
+
+            return stringBuilder.toString();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return "FAIL";
+
+    }
+
+    public void saveToStatFile(String textToSave) {
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = openFileOutput(STAT_FILE_ADDRESS, MODE_PRIVATE);
+            fileOutputStream.write(textToSave.getBytes());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void addOne(View view) {

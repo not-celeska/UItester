@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class GameSettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     TextView numDigitsDisplay;
 
@@ -22,7 +22,7 @@ public class GameSettingsActivity extends AppCompatActivity {
 
         clearSystemUI();
 
-        setContentView(R.layout.activity_game_settings);
+        setContentView(R.layout.activity_settings);
 
         // [VIEWS] This is the display which says how many digits there are.
         numDigitsDisplay = findViewById(R.id.numDigitsDisplay);
@@ -84,7 +84,7 @@ public class GameSettingsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 confirmButton.setImageResource(R.drawable.confirm);
-                Intent intent = new Intent(GameSettingsActivity.this, GameplayActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, GameplayActivity.class);
                 intent.putExtra("numDigits", Integer.valueOf(numDigitsDisplay.getText().toString()));
                 CheckBox showCorrectNumberToggle = findViewById(R.id.showCorrectNumberToggle);
                 intent.putExtra("showCorrectNumber", showCorrectNumberToggle.isChecked());

@@ -19,7 +19,7 @@
             android:name=".GameplayActivity"
             android:exported="false" />
         <activity
-            android:name=".GameSettingsActivity"
+            android:name=".SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".InfoActivity"

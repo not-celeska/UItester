@@ -21,7 +21,7 @@ public class StatsActivity extends AppCompatActivity {
 
     // all the text areas
     TextView totalPlayTimeDisplay, totalGuessesMadeDisplay, totalGamesPlayedDisplay;
-    TextView highestScoreDisplay, averageScoreDisplay, averageTimeDisplay;
+    TextView highestScoreDisplay, averageGuessesDisplay, averageTimeDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class StatsActivity extends AppCompatActivity {
         totalGuessesMadeDisplay = findViewById(R.id.totalGuessesMadeDisplay);
         totalGamesPlayedDisplay = findViewById(R.id.totalGamesPlayedDisplay);
         highestScoreDisplay = findViewById(R.id.highestScoreDisplay);
-        averageScoreDisplay = findViewById(R.id.averageScoreDisplay);
+        averageGuessesDisplay = findViewById(R.id.averageGuessesDisplay);
         averageTimeDisplay = findViewById(R.id.averageTimeDisplay);
 
         updateDisplays();
@@ -48,7 +48,7 @@ public class StatsActivity extends AppCompatActivity {
         totalGuessesMadeDisplay.setText(formatBasicStat(rawData[1]));
         totalGamesPlayedDisplay.setText(formatBasicStat(rawData[2]));
         highestScoreDisplay.setText(formatScore(rawData[3]));
-        averageScoreDisplay.setText(formatScore(rawData[4]));
+        averageGuessesDisplay.setText(formatBasicStat(rawData[4]));
         averageTimeDisplay.setText(formatTime(rawData[5].replace("\n", "")));
     }
 
