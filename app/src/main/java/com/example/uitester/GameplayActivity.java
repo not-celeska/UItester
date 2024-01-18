@@ -1,17 +1,3 @@
-
-
-/*
-
-todo:
-- show feedback,
-- random number generation / show correct number
-- score / win popup
-
-
- */
-
-
-
 package com.example.uitester;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +5,7 @@ import androidx.core.view.WindowCompat;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -102,7 +89,7 @@ public class GameplayActivity extends AppCompatActivity {
         // TODO | == TO REMOVE =======================================
 
         // [STATS] Initializes user stats.
-        totalGuesses = 1;
+        totalGuesses = 0;
         guess = "";
 
         // [TIME] Takes note of start time; will be used later.
@@ -249,12 +236,12 @@ public class GameplayActivity extends AppCompatActivity {
 
         String formattedFeedback;
 
-        if (totalGuesses < 10) {
-            formattedFeedback = " " + totalGuesses + "   ";
+        if ((totalGuesses + 1) < 10) {
+            formattedFeedback = " " + (totalGuesses + 1) + "   ";
 
         }
         else {
-            formattedFeedback = totalGuesses + "   ";
+            formattedFeedback = (totalGuesses + 1) + "   ";
         }
 
         for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
@@ -341,9 +328,36 @@ public class GameplayActivity extends AppCompatActivity {
         winScreen.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         winScreen.setCancelable(false);
 
+        TextView timeDisplay = winScreen.findViewById(R.id.timeDisplay);
+        timeDisplay.setText(formattedTime);
+
+        TextView displayTotalGuesses = winScreen.findViewById(R.id.totalGuessesDisplay);
+        displayTotalGuesses.setText(String.valueOf(totalGuesses));
+
+        TextView displayScore = winScreen.findViewById(R.id.scoreDisplay);
+        displayScore.setText(String.valueOf(score));
+
+        ImageButton closePopupButton = winScreen.findViewById(R.id.closePopup);
+        closePopupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closePopupButton.setImageResource(R.drawable.gotcha_pressed);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopupButton.setImageResource(R.drawable.gotcha);
+                        finish();
+                    }
+                }, 80); // Delay to see the icon change
+            }
+        });
+
+
 
         winScreen.show();
     }
+
 
     private String formatTime(int seconds) {
 

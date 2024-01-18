@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/win_screen" />
 
     <ImageButton
@@ -24,7 +24,6 @@
         android:layout_width="371px"
         android:layout_height="182px"
         android:background="@null"
-        android:onClick="closeMenu"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,4 +31,52 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.894"
         app:srcCompat="@drawable/gotcha" />
+
+    <TextView
+        android:id="@+id/scoreDisplay"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:fontFamily="monospace"
+        android:text="####"
+        android:textAlignment="center"
+        android:textColor="#DCEAF8"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.658" />
+
+    <TextView
+        android:id="@+id/totalGuessesDisplay"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:fontFamily="monospace"
+        android:text="##"
+        android:textAlignment="center"
+        android:textColor="#DCEAF8"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.458" />
+
+    <TextView
+        android:id="@+id/timeDisplay"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:fontFamily="monospace"
+        android:text="#m #s"
+        android:textAlignment="center"
+        android:textColor="#DCEAF8"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.267" />
 </androidx.constraintlayout.widget.ConstraintLayout>
