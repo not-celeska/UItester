@@ -16,8 +16,16 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 // == MAIN MENU =====================================
 public class MainActivity extends AppCompatActivity {
+
+    private final String STAT_FILE_ADDRESS = "stats.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         clearSystemUI();
+
+//        if (statFileEmpty()) {
+            saveToStatFile("0:0 0 0 0 0 0:0");
+//        }
 
     }
 
@@ -74,6 +86,62 @@ public class MainActivity extends AppCompatActivity {
         }, 80); // Delay to see the icon change
     }
 
+    public Boolean statFileEmpty() {
+
+        FileInputStream fileInputStream = null;
+
+        try {
+            fileInputStream = openFileInput(STAT_FILE_ADDRESS);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String textToLoad;
+
+            while ((textToLoad = bufferedReader.readLine()) != null) {
+                stringBuilder.append(textToLoad).append("\n");
+            }
+
+            return stringBuilder.toString().isEmpty();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    public void saveToStatFile(String textToSave) {
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = openFileOutput(STAT_FILE_ADDRESS, MODE_PRIVATE);
+            fileOutputStream.write(textToSave.getBytes());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     private void clearSystemUI() {
 

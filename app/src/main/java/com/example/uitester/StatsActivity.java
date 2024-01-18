@@ -7,14 +7,102 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class StatsActivity extends AppCompatActivity {
+
+    private final String STAT_FILE_ADDRESS = "stats.txt";
+
+    // all the text areas
+    TextView totalPlayTimeDisplay, totalGuessesMadeDisplay, totalGamesPlayedDisplay;
+    TextView highestScoreDisplay, averageScoreDisplay, averageTimeDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clearSystemUI();
         setContentView(R.layout.activity_stats);
+        setupDisplays();
+    }
+
+    private void setupDisplays() {
+        totalPlayTimeDisplay = findViewById(R.id.totalPlayTimeDisplay);
+        totalGuessesMadeDisplay = findViewById(R.id.totalGuessesMadeDisplay);
+        totalGamesPlayedDisplay = findViewById(R.id.totalGamesPlayedDisplay);
+        highestScoreDisplay = findViewById(R.id.highestScoreDisplay);
+        averageScoreDisplay = findViewById(R.id.averageScoreDisplay);
+        averageTimeDisplay = findViewById(R.id.averageTimeDisplay);
+
+        updateDisplays();
+    }
+
+    private void updateDisplays() {
+        String[] rawData = readStatFile().split(" ");
+        totalPlayTimeDisplay.setText(formatTime(rawData[0]));
+        totalGuessesMadeDisplay.setText(formatBasicStat(rawData[1]));
+        totalGamesPlayedDisplay.setText(formatBasicStat(rawData[2]));
+        highestScoreDisplay.setText(formatScore(rawData[3]));
+        averageScoreDisplay.setText(formatScore(rawData[4]));
+        averageTimeDisplay.setText(formatTime(rawData[5].replace("\n", "")));
+    }
+
+    private String formatTime(String unformattedTime) {
+        // expected in MM:SS
+        String formattedTime = "";
+
+        int minutes = Integer.parseInt((unformattedTime.split(":"))[0]);
+        int seconds = Integer.parseInt((unformattedTime.split(":"))[1]);
+
+        if (minutes < 10) {
+            formattedTime += ("0" + minutes);
+        }
+        else {
+            formattedTime += String.valueOf(minutes);
+        }
+
+        formattedTime += "m ";
+
+        if (seconds < 10) {
+            formattedTime += ("0" + seconds);
+        }
+        else {
+            formattedTime += String.valueOf(seconds);
+        }
+
+        formattedTime += "s";
+
+        return formattedTime;
+    }
+
+    private String formatBasicStat(String unformattedTwoDigitNumber) {
+        if (Integer.parseInt(unformattedTwoDigitNumber) < 10) {
+            return "0" + unformattedTwoDigitNumber;
+        }
+        else {
+            return unformattedTwoDigitNumber;
+        }
+    }
+
+    private String formatScore(String unformattedScore) {
+
+        if (Integer.parseInt(unformattedScore) < 10) {
+            return "000" + unformattedScore;
+        }
+        else if (Integer.parseInt(unformattedScore) < 100) {
+            return "00" + unformattedScore;
+        }
+        else if (Integer.parseInt(unformattedScore) < 1000) {
+            return "0" + unformattedScore;
+        }
+        else {
+            return unformattedScore;
+        }
     }
 
     private void clearSystemUI() {
@@ -41,7 +129,8 @@ public class StatsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 resetButton.setImageResource(R.drawable.reset);
-                // reset code goes here
+                saveToStatFile("0:0 0 0 0 0 0:0");
+                updateDisplays();
             }
         }, 80); // Delay to see the icon change
     }
@@ -57,6 +146,63 @@ public class StatsActivity extends AppCompatActivity {
                 finish();
             }
         }, 80); // Delay to see the icon change
+    }
+
+    public void saveToStatFile(String textToSave) {
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = openFileOutput(STAT_FILE_ADDRESS, MODE_PRIVATE);
+            fileOutputStream.write(textToSave.getBytes());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public String readStatFile() {
+
+        FileInputStream fileInputStream = null;
+
+        try {
+            fileInputStream = openFileInput(STAT_FILE_ADDRESS);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String textToLoad;
+
+            while ((textToLoad = bufferedReader.readLine()) != null) {
+                stringBuilder.append(textToLoad).append("\n");
+            }
+
+            return stringBuilder.toString();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return "FAIL";
+
     }
 
 }

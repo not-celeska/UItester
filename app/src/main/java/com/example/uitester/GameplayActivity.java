@@ -42,6 +42,7 @@ public class GameplayActivity extends AppCompatActivity {
     private TextView warningMessageDisplay;
     private TextView feedbackText;
 
+    private final String STAT_FILE_ADDRESS = "stats.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
