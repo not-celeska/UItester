@@ -13,6 +13,9 @@
         android:theme="@style/Theme.UItester"
         tools:targetApi="31">
         <activity
+            android:name=".StatsActivity"
+            android:exported="false" />
+        <activity
             android:name=".GameplayActivity"
             android:exported="false" />
         <activity

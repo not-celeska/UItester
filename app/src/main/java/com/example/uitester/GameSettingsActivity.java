@@ -88,7 +88,8 @@ public class GameSettingsActivity extends AppCompatActivity {
                 intent.putExtra("numDigits", Integer.valueOf(numDigitsDisplay.getText().toString()));
                 CheckBox showCorrectNumberToggle = findViewById(R.id.showCorrectNumberToggle);
                 intent.putExtra("showCorrectNumber", showCorrectNumberToggle.isChecked());
-                // TODO same for checkboxes
+                CheckBox dontSaveScoreToggle = findViewById(R.id.dontSaveScoreToggle);
+                intent.putExtra("dontSaveScore", dontSaveScoreToggle.isChecked());
                 startActivity(intent);
             }
         }, 80); // Delay to see the icon change

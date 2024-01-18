@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 statButton.setImageResource(R.drawable.stat);
-//                Intent intent = new Intent(MainActivity.this, StatActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, StatsActivity.class);
+                startActivity(intent);
             }
         }, 80); // Delay to see the icon change
     }

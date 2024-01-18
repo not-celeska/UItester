@@ -39,9 +39,7 @@ public class GameplayActivity extends AppCompatActivity {
     private final int COWS = 1; // [CLARITY] This is just for the code to be more readable.
 
     // [FEILD] Miscellanious.
-    private TextView resultsDisplay;
     private TextView warningMessageDisplay;
-    private TextView correctNumberDisplay; // TODO: remove this =====
     private TextView feedbackText;
 
 
@@ -76,7 +74,8 @@ public class GameplayActivity extends AppCompatActivity {
 
 
          if (getIntent().getBooleanExtra("showCorrectNumber", false)) {
-             correctNumberDisplay = findViewById(R.id.correctNumberDisplay); // check if shown was true, etc
+             // TODO: remove this =====
+             TextView correctNumberDisplay = findViewById(R.id.correctNumberDisplay); // check if shown was true, etc
 
              for (int symbolIndex = 0; symbolIndex < correctNumber.length(); symbolIndex++) {
                  if (symbolIndex != 0) {
@@ -177,9 +176,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-
-
-
     public void backspace(View view) {
 
         ImageButton backspaceButton = findViewById(R.id.backspaceButton);
@@ -194,8 +190,6 @@ public class GameplayActivity extends AppCompatActivity {
                         if (guess.length() > 0) {
 
                             // [CLARITY] Updates the current guess without its last digit.
-
-
 
                             guess = guess.substring(0, (guess.length() - 1));
 
@@ -212,10 +206,16 @@ public class GameplayActivity extends AppCompatActivity {
                                         textToDisplay += guess.charAt(symbolIndex);
                                     }
                                 }
-                                guessDisplay.setText(textToDisplay + " #".repeat(numDigitsInCorrectNumber - guess.length()));
+
+                                if (guess.length() == 0) {
+                                    guessDisplay.setText(("# ".repeat(numDigitsInCorrectNumber)).substring(0, numDigitsInCorrectNumber * 2 - 1));
+                                }
+                                else {
+                                    guessDisplay.setText(textToDisplay + " #".repeat(numDigitsInCorrectNumber - guess.length()));
+                                }
                             }
                             catch(Exception e) {
-                                guessDisplay.setText("#" + " #".repeat(numDigitsInCorrectNumber - 1));
+                                warningMessageDisplay.setText("BACKSPACE ERROR: CATCH REACHED");
                             }
 
 //                             [CLARITY] Will update the guess length warning.
@@ -226,11 +226,6 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }, 70); // Delay to see the icon change
     }
-
-
-
-
-
 
     private String formatFeedback(int[] feedback) {
 
@@ -328,6 +323,16 @@ public class GameplayActivity extends AppCompatActivity {
         winScreen.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         winScreen.setCancelable(false);
 
+        if (getIntent().getBooleanExtra("showCorrectNumber", false) || getIntent().getBooleanExtra("dontSaveScore", false)) {
+            TextView dataNotSavedDisplay = winScreen.findViewById(R.id.dataNotSavedDisplay);
+            dataNotSavedDisplay.setText("THIS DATA IS NOT SAVED!");
+        }
+        else {
+            saveData();
+        }
+
+
+
         TextView timeDisplay = winScreen.findViewById(R.id.timeDisplay);
         timeDisplay.setText(formattedTime);
 
@@ -374,8 +379,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-
-
     private void clearSystemUI() {
 
         // Gets rid of the status bar / makes it transparent
@@ -389,6 +392,10 @@ public class GameplayActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    private void saveData() {
+
     }
 
     public void addOne(View view) {
