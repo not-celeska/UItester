@@ -52,9 +52,11 @@ public class GameplayActivity extends AppCompatActivity {
     private TextView warningMessageDisplay;
     private TextView feedbackText;
 
+
     // ==================================
     // == CLASS METHODS [FUNCTIONS] =====
     // ==================================
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,12 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
+
+    // ==================================
+    // == SETUP METHODS =================
+    // ==================================
+
+
     private void setupViews() {
 
         guessDisplay = findViewById(R.id.guessDisplay);
@@ -77,8 +85,6 @@ public class GameplayActivity extends AppCompatActivity {
 
         warningMessageDisplay = findViewById(R.id.warningDisplay);
         warningMessageDisplay.setTextColor(Color.RED);
-//        correctNumberDisplay = findViewById(R.id.correctNumberDisplay);
-//        resultsDisplay = findViewById(R.id.resultsDisplay);
         feedbackText = findViewById(R.id.feedbackText);
         feedbackText.setMovementMethod(new ScrollingMovementMethod());
     }
@@ -90,19 +96,17 @@ public class GameplayActivity extends AppCompatActivity {
         correctNumber = generateRandomNumber(numDigitsInCorrectNumber);
 
 
-         if (getIntent().getBooleanExtra("showCorrectNumber", false)) {
-             // TODO: remove this =====
-             TextView correctNumberDisplay = findViewById(R.id.correctNumberDisplay); // check if shown was true, etc
+        if (getIntent().getBooleanExtra("showCorrectNumber", false)) {
+            TextView correctNumberDisplay = findViewById(R.id.correctNumberDisplay); // check if shown was true, etc
 
-             for (int symbolIndex = 0; symbolIndex < correctNumber.length(); symbolIndex++) {
-                 if (symbolIndex != 0) {
-                     correctNumberDisplay.append("  " + correctNumber.charAt(symbolIndex));
-                 } else {
-                     correctNumberDisplay.setText(String.valueOf(correctNumber.charAt(0)));
-                 }
-             }
-         }
-        // TODO | == TO REMOVE =======================================
+            for (int symbolIndex = 0; symbolIndex < correctNumber.length(); symbolIndex++) {
+                if (symbolIndex != 0) {
+                    correctNumberDisplay.append("  " + correctNumber.charAt(symbolIndex));
+                } else {
+                    correctNumberDisplay.setText(String.valueOf(correctNumber.charAt(0)));
+                }
+            }
+        }
 
         // [STATS] Initializes user stats.
         totalGuesses = 0;
@@ -113,6 +117,12 @@ public class GameplayActivity extends AppCompatActivity {
 
         // [THOUGHT] In a TUI, this is where the while loop would start.
     }
+
+
+    // ==================================
+    // == GAMEPLAY METHODS ==============
+    // ==================================
+
 
     private void addSymbolToGuess(char symbol) {
 
@@ -138,109 +148,6 @@ public class GameplayActivity extends AppCompatActivity {
         }
 
         warningMessageDisplay.setText("");
-    }
-
-    public void closeMenu(View view) {
-        ImageButton quitButton = findViewById(R.id.quitButton);
-        quitButton.setImageResource(R.drawable.quit_pressed);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                quitButton.setImageResource(R.drawable.quit);
-                finish();
-            }
-        }, 80); // Delay to see the icon change
-    }
-
-    public void submit(View view) {
-
-        ImageButton submitButton = findViewById(R.id.submitButton);
-        submitButton.setImageResource(R.drawable.submit_pressed);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                submitButton.setImageResource(R.drawable.submit);
-
-                        // [CLARITY] Checks if there's enough digits in the guess to process it.
-                        if (guess.length() == numDigitsInCorrectNumber) {
-
-                            // [FEEDBACK] Gets the feedback & Writes it in the feedbackText.
-                            guessFeedback = getGuessFeedback(); // [THOUGHT] "Feedback is the breakfast of champions!"
-                            feedbackText.append("\n\n" + formatFeedback(guessFeedback));
-
-                            totalGuesses++; // [CLARITY] Updates the total guesses took.
-
-                            // [WIN CONDITION] Calls on the win condition.
-                            if (guessFeedback[BULLS] == numDigitsInCorrectNumber) {
-                                userWinsGame();
-                            }
-
-                            // [RESET] Reset the guess for next turn.
-                            guessDisplay.setText("#" + " #".repeat(numDigitsInCorrectNumber - 1));
-                            guess = "";
-
-
-                        }
-                        else {
-                            warningMessageDisplay.setText("Submission Error: \nNOT ENOUGH NUMBERS");
-                        }
-
-            }
-        }, 70); // Delay to see the icon change
-
-    }
-
-    public void backspace(View view) {
-
-        ImageButton backspaceButton = findViewById(R.id.backspaceButton);
-        backspaceButton.setImageResource(R.drawable.backspace_pressed);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                backspaceButton.setImageResource(R.drawable.backspace);
-
-                // [CLARITY] Checks that the guess has more than 0 numbers in the guess.
-                        if (guess.length() > 0) {
-
-                            // [CLARITY] Updates the current guess without its last digit.
-
-                            guess = guess.substring(0, (guess.length() - 1));
-
-                            try {
-                                String textToDisplay = "";
-
-                                // do add 0th element here then do the rest in the loop
-
-                                for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
-                                    if (symbolIndex != 0) {
-                                        textToDisplay += " " + guess.charAt(symbolIndex);
-                                    }
-                                    else {
-                                        textToDisplay += guess.charAt(symbolIndex);
-                                    }
-                                }
-
-                                if (guess.length() == 0) {
-                                    guessDisplay.setText(("# ".repeat(numDigitsInCorrectNumber)).substring(0, numDigitsInCorrectNumber * 2 - 1));
-                                }
-                                else {
-                                    guessDisplay.setText(textToDisplay + " #".repeat(numDigitsInCorrectNumber - guess.length()));
-                                }
-                            }
-                            catch(Exception e) {
-                                warningMessageDisplay.setText("BACKSPACE ERROR: CATCH REACHED");
-                            }
-
-//                             [CLARITY] Will update the guess length warning.
-                            warningMessageDisplay.setText("");
-                        }
-
-
-            }
-        }, 70); // Delay to see the icon change
     }
 
     private String formatFeedback(int[] feedback) {
@@ -297,6 +204,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
+    // Feedback is the breakfast of champions!!!
     public int[] getGuessFeedback() {
 
         int[] guessFeedback = {0, 0};
@@ -373,6 +281,12 @@ public class GameplayActivity extends AppCompatActivity {
 
         winScreen.show();
     }
+
+
+    // ==================================
+    // == BACK-END METHODS ==============
+    // ==================================
+
 
     private String formatTime(int seconds) {
 
@@ -509,6 +423,129 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    // ==================================
+    // == KEYPAD BUTTON METHODS =========
+    // ==================================
+
+
+    // Parameters: View | Requirement for button-activation.
+    // Description: Closes the game screen.
+    public void closeMenu(View view) {
+
+        ImageButton quitButton = findViewById(R.id.quitButton);
+        quitButton.setImageResource(R.drawable.quit_pressed);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                quitButton.setImageResource(R.drawable.quit);
+
+                finish();
+
+            }
+        }, 80);
+
+    }
+
+    // Parameters: View | Requirement for button-activation.
+    // Description: Checks if submission is valid, initiates feedback.
+    public void submit(View view) {
+
+        ImageButton submitButton = findViewById(R.id.submitButton);
+        submitButton.setImageResource(R.drawable.submit_pressed);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                submitButton.setImageResource(R.drawable.submit);
+
+                // [CLARITY] Checks if there's enough digits in the guess to process it.
+                if (guess.length() == numDigitsInCorrectNumber) {
+
+                    // [FEEDBACK] Gets the feedback & writes it in the feedbackText.
+                    guessFeedback = getGuessFeedback(); // [THOUGHT] "Feedback is the breakfast of champions!"
+                    feedbackText.append("\n\n" + formatFeedback(guessFeedback));
+
+                    totalGuesses++; // [CLARITY] Updates the total guesses took.
+
+                    // [WIN CONDITION] Calls on the win condition.
+                    if (guessFeedback[BULLS] == numDigitsInCorrectNumber) {
+                        userWinsGame();
+                    }
+
+                    // [RESET] Reset the guess for next turn.
+                    guessDisplay.setText("#" + " #".repeat(numDigitsInCorrectNumber - 1));
+                    guess = "";
+
+
+                }
+                else {
+                    warningMessageDisplay.setText("Submission Error: \nNOT ENOUGH NUMBERS");
+                }
+
+            }
+        }, 70);
+
+    }
+
+    // Parameters: View | Requirement for button-activation.
+    // Description: Removes last digit from guess (unless empty).
+    public void backspace(View view) {
+
+        ImageButton backspaceButton = findViewById(R.id.backspaceButton);
+        backspaceButton.setImageResource(R.drawable.backspace_pressed);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                backspaceButton.setImageResource(R.drawable.backspace);
+
+                // [CLARITY] Checks that the guess has more than 0 numbers in the guess.
+                if (guess.length() > 0) {
+
+                    // [CLARITY] Updates the current guess without its last digit.
+
+                    guess = guess.substring(0, (guess.length() - 1));
+
+                    try {
+                        String textToDisplay = "";
+
+                        // do add 0th element here then do the rest in the loop
+
+                        for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
+                            if (symbolIndex != 0) {
+                                textToDisplay += " " + guess.charAt(symbolIndex);
+                            }
+                            else {
+                                textToDisplay += guess.charAt(symbolIndex);
+                            }
+                        }
+
+                        if (guess.length() == 0) {
+                            guessDisplay.setText(("# ".repeat(numDigitsInCorrectNumber)).substring(0, numDigitsInCorrectNumber * 2 - 1));
+                        }
+                        else {
+                            guessDisplay.setText(textToDisplay + " #".repeat(numDigitsInCorrectNumber - guess.length()));
+                        }
+                    }
+                    catch(Exception e) {
+                        warningMessageDisplay.setText("BACKSPACE ERROR: CATCH REACHED");
+                    }
+
+//                             [CLARITY] Will update the guess length warning.
+                    warningMessageDisplay.setText("");
+                }
+
+
+            }
+        }, 70); // Delay to see the icon change
+    }
+
+    // == THE FOLLOWING 10 METHODS ===============================
+    // Are the same; they only change a character passed into the
+    // addSymbolToGuess method, they also change their respective icon.
 
     public void addOne(View view) {
 
