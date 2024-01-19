@@ -361,8 +361,6 @@ public class GameplayActivity extends AppCompatActivity {
             }
         });
 
-
-
         winScreen.show();
     }
 

@@ -3,9 +3,11 @@ package com.example.uitester;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -120,7 +122,6 @@ public class StatsActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-
     public void resetStats(View view) {
         ImageButton resetButton = findViewById(R.id.resetButton);
         resetButton.setImageResource(R.drawable.reset_pressed);
@@ -128,9 +129,51 @@ public class StatsActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
                 resetButton.setImageResource(R.drawable.reset);
-                saveToStatFile("0:0 0 0 0 0 0:0");
-                updateDisplays();
+
+
+                Dialog confirmationScreen = new Dialog(StatsActivity.this);
+                confirmationScreen.setContentView(R.layout.confirmation_screen);
+                confirmationScreen.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                confirmationScreen.setCancelable(false);
+
+                ImageButton noButton = confirmationScreen.findViewById(R.id.noButton);
+                noButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        noButton.setImageResource(R.drawable.no_pressed);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                noButton.setImageResource(R.drawable.no);
+                                confirmationScreen.cancel();
+                            }
+                        }, 80); // Delay to see the icon change
+                    }
+                });
+
+                ImageButton yesButton = confirmationScreen.findViewById(R.id.yesButton);
+                yesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        yesButton.setImageResource(R.drawable.yes_pressed);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                noButton.setImageResource(R.drawable.yes);
+                                saveToStatFile("0:0 0 0 0 0 0:0");
+                                updateDisplays();
+                                confirmationScreen.cancel();
+                            }
+                        }, 80); // Delay to see the icon change
+                    }
+                });
+
+                confirmationScreen.show();
             }
         }, 80); // Delay to see the icon change
     }
