@@ -7,7 +7,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/bk_square_icon"
-        android:label="finalVers"
+        android:label="B24K"
         android:roundIcon="@drawable/bk_circular_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.UItester"
