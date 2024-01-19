@@ -28,15 +28,14 @@ public class GameplayActivity extends AppCompatActivity {
     // == CLASS VARIABLES [FIELDS] =====
     // ==================================
 
-    // [FIELD] User stats.
-    private int totalGuesses;
+    // [FIELD] Game stats.
+    private int guessesTaken;
     private long startTime;
     private long endTime;
 
     // [FIELD] Correct number variables.
     private int numDigitsInCorrectNumber;
     private String correctNumber; // String is required for "0123" possibility.
-    private ArrayList<Character> correctNumberCharacters;
 
     // [FIELD] Guess number variables.
     private TextView guessDisplay;
@@ -77,39 +76,50 @@ public class GameplayActivity extends AppCompatActivity {
     // == SETUP METHODS =================
     // ==================================
 
-
+    // Parameters: None | Uses access to class variables.
+    // Description: Wires the text fields to variables in this class.
     private void setupViews() {
 
         guessDisplay = findViewById(R.id.guessDisplay);
         guessDisplay.setText("#" + " #".repeat(numDigitsInCorrectNumber - 1));
-
         warningMessageDisplay = findViewById(R.id.warningDisplay);
         warningMessageDisplay.setTextColor(Color.RED);
         feedbackText = findViewById(R.id.feedbackText);
-        feedbackText.setMovementMethod(new ScrollingMovementMethod());
+        feedbackText.setMovementMethod(new ScrollingMovementMethod()); // [CLARITY] Sets the text field to be scrollable.
+
     }
 
+    // Parameters: None | Uses access to class variables.
+    // Description: Generates random number, notes start time, sets total guesses to 0.
     private void setupGameVariables() {
 
-        // [CLARITY] Takes the passed 'numberOfDigits' from the GameSettings class.
+        // [CORRECT NUMBER] Takes the passed 'numberOfDigits' from the GameSettings class.
         numDigitsInCorrectNumber = getIntent().getIntExtra("numDigits", 4);
         correctNumber = generateRandomNumber(numDigitsInCorrectNumber);
 
-
+        // [SHOW CORRECT NUMBER] Will show the correct number if the user checked the box in the settings.
         if (getIntent().getBooleanExtra("showCorrectNumber", false)) {
-            TextView correctNumberDisplay = findViewById(R.id.correctNumberDisplay); // check if shown was true, etc
 
+            // [TEXT FIELD] Finds and saves the display.
+            TextView correctNumberDisplay = findViewById(R.id.correctNumberDisplay);
+
+            // [CORRECT NUMBER SHOW] Sets the text in the text field to a formatted correct number.
             for (int symbolIndex = 0; symbolIndex < correctNumber.length(); symbolIndex++) {
                 if (symbolIndex != 0) {
                     correctNumberDisplay.append("  " + correctNumber.charAt(symbolIndex));
-                } else {
+                }
+                else {
                     correctNumberDisplay.setText(String.valueOf(correctNumber.charAt(0)));
                 }
+
+                // [RESULT] "1234" --> "1 2 3 4"
+
             }
+
         }
 
         // [STATS] Initializes user stats.
-        totalGuesses = 0;
+        guessesTaken = 0;
         guess = "";
 
         // [TIME] Takes note of start time; will be used later.
@@ -123,17 +133,16 @@ public class GameplayActivity extends AppCompatActivity {
     // == GAMEPLAY METHODS ==============
     // ==================================
 
-
+    // Parameters: Char | Symbol to add to guess.
+    // Description: Adds a given symbol to the guess string.
     private void addSymbolToGuess(char symbol) {
 
-        // [CLARITY] Is there already enough digits in the guess?
+        // [CONDITION] Is there already enough digits in the guess?
         if (guess.length() < numDigitsInCorrectNumber) {
 
-            guess += symbol; // [CLARITY] Concatenates the chosen number to the guess.
+            guess += symbol; // [CONCATENATION] Concatenates the chosen number to the guess.
 
             String textToDisplay = "";
-
-            // do add 0th element here then do the rest in the loop
 
             for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
                 if (symbolIndex != 0) {
@@ -147,19 +156,23 @@ public class GameplayActivity extends AppCompatActivity {
 
         }
 
+        // [CLARITY] Clears the warning.
         warningMessageDisplay.setText("");
+
     }
 
+    // Parameters: None | Uses access to class variables.
+    // Description: Formats feedback: (Turn 1) 1B2C --> " 1 |    1B  2C"
     private String formatFeedback(int[] feedback) {
 
         String formattedFeedback;
 
-        if ((totalGuesses + 1) < 10) {
-            formattedFeedback = " " + (totalGuesses + 1) + "   ";
+        if ((guessesTaken + 1) < 10) {
+            formattedFeedback = " " + (guessesTaken + 1) + "   ";
 
         }
         else {
-            formattedFeedback = (totalGuesses + 1) + "   ";
+            formattedFeedback = (guessesTaken + 1) + "   ";
         }
 
         for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
@@ -169,9 +182,13 @@ public class GameplayActivity extends AppCompatActivity {
         formattedFeedback += " | " + feedback[BULLS] + "B " + feedback[COWS] + "C";
 
         return formattedFeedback;
+
     }
 
+    // Parameters: int | How many numbers in the correct
+    // Description: Generates a string with [param] random digits.
     private String generateRandomNumber(int numDigits) {
+
         Random numberGenerator = new Random();
         String randomNumber = "";
 
@@ -196,7 +213,7 @@ public class GameplayActivity extends AppCompatActivity {
             }
             else
             {
-                randomNumber += randomDigit; // Appends this random digit to the randomnumber.
+                randomNumber += randomDigit; // Appends this random digit to the random number String.
             }
         }
 
@@ -204,7 +221,8 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-    // Feedback is the breakfast of champions!!!
+    // Parameters: None | Uses access to class variables.
+    // Description: Returns int[] with Bulls and Cows: [BULLS, COWS].
     public int[] getGuessFeedback() {
 
         int[] guessFeedback = {0, 0};
@@ -231,6 +249,8 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
+    // Parameters: None | Uses access to class variables.
+    // Description: Calculates, displays, and saves game stats to file.
     private void userWinsGame() {
 
         // [TIME] Takes note of end time; then processes it.
@@ -239,13 +259,20 @@ public class GameplayActivity extends AppCompatActivity {
         String formattedTime = formatTime(secondsElapsed);
 
         // [SCORE] Scuffly calculates the score based off: Guesses needed, time needed (in seconds), and number of digits.
-        int score = (int) (((15.0 / (1.0 * totalGuesses)) + (10.0 / (1.0 * secondsElapsed))) * 200.0 * (numDigitsInCorrectNumber - 1));
+        int score = (int) (((15.0 / (1.0 * guessesTaken)) + (10.0 / (1.0 * secondsElapsed))) * 200.0 * (numDigitsInCorrectNumber - 1));
 
+        // [POPUP] Initializes the win popup display.
         Dialog winScreen = new Dialog(GameplayActivity.this);
         winScreen.setContentView(R.layout.win_screen);
+
+        // [CLARITY] Sets popup size.
         winScreen.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+        // [CLARITY] Clicking outside the popup will not close the popup.
         winScreen.setCancelable(false);
 
+        // [SCORE MESSAGE] If correct number was shown (cheats) or "dont save score" setting was enabled, message will show up and stats will not be saved.
         if (getIntent().getBooleanExtra("showCorrectNumber", false) || getIntent().getBooleanExtra("dontSaveScore", false)) {
             TextView dataNotSavedDisplay = winScreen.findViewById(R.id.dataNotSavedDisplay);
             dataNotSavedDisplay.setText("THIS DATA IS NOT SAVED!");
@@ -254,32 +281,38 @@ public class GameplayActivity extends AppCompatActivity {
             saveData(secondsElapsed, score);
         }
 
+        // [TEXTVIEW] Initialize and show time taken.
         TextView timeDisplay = winScreen.findViewById(R.id.timeDisplay);
         timeDisplay.setText(formattedTime);
 
-        TextView displayTotalGuesses = winScreen.findViewById(R.id.totalGuessesDisplay);
-        displayTotalGuesses.setText(String.valueOf(totalGuesses));
+        // [TEXTVIEW] Initialize and show guesses taken.
+        TextView guessesTakenDisplay = winScreen.findViewById(R.id.guessesTakenDisplay);
+        guessesTakenDisplay.setText(String.valueOf(guessesTaken));
 
+        // [TEXTVIEW] Initialize and show score.
         TextView displayScore = winScreen.findViewById(R.id.scoreDisplay);
         displayScore.setText(String.valueOf(score));
 
+        // [IMAGE-BUTTON] Initialize and set listener for close (gotcha) button.
         ImageButton closePopupButton = winScreen.findViewById(R.id.closePopup);
         closePopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closePopupButton.setImageResource(R.drawable.gotcha_pressed);
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         closePopupButton.setImageResource(R.drawable.gotcha);
+
                         finish();
+
                     }
-                }, 80); // Delay to see the icon change
+                }, 80); 
             }
         });
 
-        winScreen.show();
+        winScreen.show(); // [CLARITY] Show popup.
+
     }
 
 
@@ -287,7 +320,8 @@ public class GameplayActivity extends AppCompatActivity {
     // == BACK-END METHODS ==============
     // ==================================
 
-
+    // Parameters: int | Total time taken in seconds.
+    // Description: Returns String: 65 seconds --> "1m 5s"
     private String formatTime(int seconds) {
 
         // [CLARITY] If there's only seconds, it will look like "#s".
@@ -303,12 +337,14 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
+    // Parameters: None | Actions *inside* affect the UI construction.
+    // Description: Gets rid of system UI: Navigation & Status bars.
     private void clearSystemUI() {
 
-        // Gets rid of the status bar / makes it transparent
+        // [CLARITY] Gets rid of the top status bar.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        // Gets rid of the nav bar
+        // [CLARITY] Gets rid of the bottom navigation bar.
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -316,59 +352,64 @@ public class GameplayActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        
     }
 
+    // Parameters: int(s) | Stats from the game which are not class variables.
+    // Description: Updates the stats in the file with game's stats.
     private void saveData(int gameTotalSecondsPlayed, int gameScore) {
 
         String[] oldRawData = readStatFile().split(" ");
         String newData = "";
 
-        // total play time -- extract old one, add new, format MM:SS
+        // [TOTAL PLAYTIME] Extract old, add new, format MM:SS.
         int gameMinutes = gameTotalSecondsPlayed / 60;
         int gameSeconds = gameTotalSecondsPlayed % 60;
-
         int oldMinutes = Integer.parseInt(oldRawData[0].split(":")[0]);
         int oldSeconds = Integer.parseInt(oldRawData[0].split(":")[1]);
-
         int newMinutes = oldMinutes + gameMinutes + (gameSeconds + oldSeconds) / 60;
         int newSeconds = (gameSeconds + oldSeconds) % 60;
-
         newData += newMinutes + ":" + newSeconds + " ";
 
-        // total guesses made.
+        // [TOTAL GUESSES MADE] Extract old, sum old and new, put back into file.
         int oldTotalGuesses = Integer.parseInt(oldRawData[1]);
-        newData += (oldTotalGuesses + totalGuesses) + " ";
+        newData += (oldTotalGuesses + guessesTaken) + " ";
 
-        // total games played.
+        // [TOTAL GAMES PLAYED] Extract old, put back (old + 1).
         int oldTotalGamesPlayed = Integer.parseInt(oldRawData[2]);
         newData += (oldTotalGamesPlayed + 1) + " ";
 
-        // highest score
+        // [HIGH SCORE] Extract old, check if score higher than saved high score, put back in.
         int oldHighscore = Integer.parseInt(oldRawData[3]);
         if (gameScore > oldHighscore) {
             newData += gameScore + " ";
         }
         else {
+            // [CLARITY] If its not greater than, then just put the old one back.
             newData += oldHighscore + " ";
         }
 
-        // average guesses
-        newData += (oldTotalGuesses + totalGuesses) / (oldTotalGamesPlayed + 1) + " ";
+        // [AVERAGE GUESSES] Take new total guesses and divide by new total games played.
+        newData += (oldTotalGuesses + guessesTaken) / (oldTotalGamesPlayed + 1) + " ";
 
-        // average time
+        // [AVERAGE TIME] Convert new time to seconds, average seconds, convert back to MM:SS.
         int totalSeconds = newSeconds + newMinutes * 60;
         int averageTotalSeconds = totalSeconds / (oldTotalGamesPlayed + 1);
-
         int averageMinutes = averageTotalSeconds / 60;
         int averageSeconds = averageTotalSeconds % 60;
-
         newData += averageMinutes + ":" + averageSeconds;
 
+        // [SAVING] Save the new data to the file to replace the old one.
         saveToStatFile(newData);
+        
     }
 
+    // Parameters: None | Uses access to static variable.
+    // Description: Returns the text inside the stat file.
     public String readStatFile() {
 
+        // Disclaimer: same thing as the read from other classes.
+        
         FileInputStream fileInputStream = null;
 
         try {
@@ -403,7 +444,10 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
+    // Parameters: String | Text to SAVE to the file.
+    // Description: Saves given text to the "stats.txt" file.
     public void saveToStatFile(String textToSave) {
+        
         FileOutputStream fileOutputStream = null;
 
         try {
@@ -442,7 +486,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 quitButton.setImageResource(R.drawable.quit);
 
-                finish();
+                finish(); // [CLARITY] Closes the gameplay menu (screen).
 
             }
         }, 80);
@@ -461,25 +505,24 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 submitButton.setImageResource(R.drawable.submit);
 
-                // [CLARITY] Checks if there's enough digits in the guess to process it.
+                // [CONDITION] Checks if there's enough digits in the guess to process it.
                 if (guess.length() == numDigitsInCorrectNumber) {
 
                     // [FEEDBACK] Gets the feedback & writes it in the feedbackText.
                     guessFeedback = getGuessFeedback(); // [THOUGHT] "Feedback is the breakfast of champions!"
                     feedbackText.append("\n\n" + formatFeedback(guessFeedback));
 
-                    totalGuesses++; // [CLARITY] Updates the total guesses took.
+                    guessesTaken++; // [GUESSES TAKEN] Updates the total guesses took.
 
-                    // [WIN CONDITION] Calls on the win condition.
+                    // [CONDITION] Calls on the win condition.
                     if (guessFeedback[BULLS] == numDigitsInCorrectNumber) {
                         userWinsGame();
                     }
 
-                    // [RESET] Reset the guess for next turn.
+                    // [RESET] Reset the guess and guess display for next turn.
                     guessDisplay.setText("#" + " #".repeat(numDigitsInCorrectNumber - 1));
                     guess = "";
-
-
+                    
                 }
                 else {
                     warningMessageDisplay.setText("Submission Error: \nNOT ENOUGH NUMBERS");
@@ -502,18 +545,17 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 backspaceButton.setImageResource(R.drawable.backspace);
 
-                // [CLARITY] Checks that the guess has more than 0 numbers in the guess.
+                // [CONDITION] Checks that the guess has more than 0 numbers in the guess.
                 if (guess.length() > 0) {
 
-                    // [CLARITY] Updates the current guess without its last digit.
-
+                    // [RECOMPOSE] Updates the current guess without its last digit.
                     guess = guess.substring(0, (guess.length() - 1));
 
                     try {
+                        
                         String textToDisplay = "";
 
-                        // do add 0th element here then do the rest in the loop
-
+                        // [UPDATE GUESS DISPLAY] Formatted to be: 123 --> "1 2 3 # #".
                         for (int symbolIndex = 0; symbolIndex < guess.length(); symbolIndex++) {
                             if (symbolIndex != 0) {
                                 textToDisplay += " " + guess.charAt(symbolIndex);
@@ -523,24 +565,28 @@ public class GameplayActivity extends AppCompatActivity {
                             }
                         }
 
+                        // [IF GUESS IS NOW EMPTY] Format empty guess.
                         if (guess.length() == 0) {
                             guessDisplay.setText(("# ".repeat(numDigitsInCorrectNumber)).substring(0, numDigitsInCorrectNumber * 2 - 1));
                         }
                         else {
                             guessDisplay.setText(textToDisplay + " #".repeat(numDigitsInCorrectNumber - guess.length()));
                         }
+                        
                     }
                     catch(Exception e) {
                         warningMessageDisplay.setText("BACKSPACE ERROR: CATCH REACHED");
                     }
 
-//                             [CLARITY] Will update the guess length warning.
+                    // [CLARITY] Will update the guess length warning.
                     warningMessageDisplay.setText("");
                 }
-
-
+                else {
+                    warningMessageDisplay.setText("BACKSPACE ERROR: NO DIGITS");
+                }
+                
             }
-        }, 70); // Delay to see the icon change
+        }, 70);
     }
 
     // == THE FOLLOWING 10 METHODS ===============================
@@ -558,7 +604,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonOne.setImageResource(R.drawable.num_one);
                 addSymbolToGuess('1');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addTwo(View view) {
@@ -572,7 +618,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonTwo.setImageResource(R.drawable.num_two);
                 addSymbolToGuess('2');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addThree(View view) {
@@ -586,7 +632,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonThree.setImageResource(R.drawable.num_three);
                 addSymbolToGuess('3');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addFour(View view) {
@@ -600,7 +646,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonFour.setImageResource(R.drawable.num_four);
                 addSymbolToGuess('4');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addFive(View view) {
@@ -614,7 +660,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonFive.setImageResource(R.drawable.num_five);
                 addSymbolToGuess('5');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addSix(View view) {
@@ -628,7 +674,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonSix.setImageResource(R.drawable.num_six);
                 addSymbolToGuess('6');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addSeven(View view) {
@@ -642,7 +688,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonSeven.setImageResource(R.drawable.num_seven);
                 addSymbolToGuess('7');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addEight(View view) {
@@ -656,7 +702,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonEight.setImageResource(R.drawable.num_eight);
                 addSymbolToGuess('8');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addNine(View view) {
@@ -670,7 +716,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonNine.setImageResource(R.drawable.num_nine);
                 addSymbolToGuess('9');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
     public void addZero(View view) {
@@ -684,7 +730,7 @@ public class GameplayActivity extends AppCompatActivity {
                 buttonZero.setImageResource(R.drawable.num_zero);
                 addSymbolToGuess('0');
             }
-        }, 70); // Delay to see the icon change
+        }, 70); 
     }
 
 }

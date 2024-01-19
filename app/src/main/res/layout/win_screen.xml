@@ -49,7 +49,7 @@
         app:layout_constraintVertical_bias="0.658" />
 
     <TextView
-        android:id="@+id/totalGuessesDisplay"
+        android:id="@+id/guessesTakenDisplay"
         android:layout_width="131dp"
         android:layout_height="48dp"
         android:fontFamily="monospace"
