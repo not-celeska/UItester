@@ -113,7 +113,7 @@ public class StatsActivity extends AppCompatActivity {
     // Description: Quickly switches the gotcha button image closes the menu.
     public void closeMenu(View view) {
 
-        ImageButton gotchaButton = findViewById(R.id.gotchaButton);
+        ImageButton gotchaButton = findViewById(R.id.gotchaButtonStat);
         gotchaButton.setImageResource(R.drawable.gotcha_pressed);
 
         new Handler().postDelayed(new Runnable() {

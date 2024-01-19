@@ -2,7 +2,6 @@
 package com.example.uitester;
 
 // == IMPORTS ==================================
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import android.content.Intent;

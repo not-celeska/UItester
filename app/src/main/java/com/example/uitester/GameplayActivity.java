@@ -1,11 +1,11 @@
+// == FILE LOCATION =========
 package com.example.uitester;
 
+// == IMPORTS ==================================
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
-
 import android.app.Dialog;
 import android.graphics.Color;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -13,48 +13,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
+// == GAMEPLAY SCREEN ===================================
 public class GameplayActivity extends AppCompatActivity {
 
-    // [FEILD] User stats.
+    // ==================================
+    // == CLASS VARIABLES [FIELDS] =====
+    // ==================================
+
+    // [FIELD] User stats.
     private int totalGuesses;
     private long startTime;
     private long endTime;
 
-    // [FEILD] Correct number variables.
+    // [FIELD] Correct number variables.
     private int numDigitsInCorrectNumber;
     private String correctNumber; // String is required for "0123" possibility.
     private ArrayList<Character> correctNumberCharacters;
 
-    // [FEILD] Guess number variables.
+    // [FIELD] Guess number variables.
     private TextView guessDisplay;
     private String guess;
 
-    // [FEILD] Feedback variables.
+    // [FIELD] Feedback variables.
     private int[] guessFeedback = new int[2]; // [CLARITY] Where the feedback will be stored.
     private final int BULLS = 0; // [CLARITY] This is just for the code to be more readable.
     private final int COWS = 1; // [CLARITY] This is just for the code to be more readable.
 
-    // [FEILD] Miscellanious.
+    // [FIELD] Miscellaneous.
+    private final String STAT_FILE_ADDRESS = "stats.txt";
     private TextView warningMessageDisplay;
     private TextView feedbackText;
 
-    private final String STAT_FILE_ADDRESS = "stats.txt";
+    // ==================================
+    // == CLASS METHODS [FUNCTIONS] =====
+    // ==================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // [LAYOUT] Default layout creation.
         super.onCreate(savedInstanceState);
-        clearSystemUI();
         setContentView(R.layout.activity_gameplay);
+        clearSystemUI();
+
+        // [SETUP] Setup game.
         setupGameVariables();
         setupViews();
 
