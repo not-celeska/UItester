@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // [LAYOUT] Default layout creation.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // [CLARITY] Get rid of the top and bottom bar.
         clearSystemUI();
 
         // [CLARITY] If the app is first open (the stat file hasn't been initialized yet),
